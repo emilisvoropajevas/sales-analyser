@@ -1,17 +1,29 @@
 import pandas as pd
 from datetime import datetime
-import io
+from io import BytesIO
 
+required_columns = ['Order Date', 'Order ID', 'Product SKU', 'Product Name', 'Qty Ordered', 'Price']
 #Cleaning function for uploaded data
 
 def clean_and_format_data(csv_file):
-    uploaded_file_as_dataframe = pd.read_csv(io.BytesIO(csv_file))
+    try:
+        uploaded_file_as_dataframe = pd.read_csv(BytesIO(csv_file))
+    except Exception:
+        raise ValueError("Could not parse CSV file")
+    if uploaded_file_as_dataframe.empty:
+        raise ValueError("CSV File is empty")
+    
+    missing_columns = set(required_columns) - set(uploaded_file_as_dataframe.columns)
+    if missing_columns:
+        raise ValueError(f"Column {missing_columns} missing from Dataframe")
+
     uploaded_file_as_dataframe['Order Date'] = (pd.to_datetime(uploaded_file_as_dataframe['Order Date'], errors = 'coerce')).dt.normalize()
-
-    # Select required fields - Order Date - Product SKU - Product Name - Price - Qty Ordered
+    if uploaded_file_as_dataframe['Order Date'].isnull().sum() / len(uploaded_file_as_dataframe['Order Date']) > 0.1:
+        raise ValueError("Too many null Date rows")
+    
     report_dataframe = uploaded_file_as_dataframe[['Order Date', 'Order ID', 'Product SKU', 'Product Name', 'Qty Ordered', 'Price']].copy()
-
-    # - Remove matching threads and samples
+    
+     # - Business Logic
     report_dataframe = report_dataframe[report_dataframe['Product SKU'].str.contains("-f", na = False)]
 
     # - Order in ascending order
