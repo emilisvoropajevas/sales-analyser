@@ -2,3 +2,5 @@
 .venv
 .python-version
 __pycache__
+records.db
+test_dataframe.csv

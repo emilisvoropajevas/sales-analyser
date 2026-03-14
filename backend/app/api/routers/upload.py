@@ -20,7 +20,7 @@ async def clean_upload(file : UploadFile):
     contents = await file.read()
     try:
         clean_and_format_data(contents)
-    except ValueError as empty_file:
-        raise HTTPException(status_code=422, detail=str(empty_file))
+    except ValueError as error_value:
+        raise HTTPException(status_code=422, detail=str(error_value))
     return clean_and_format_data(contents).to_dict(orient="records")
 
