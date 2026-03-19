@@ -14,3 +14,6 @@ User Clicks button -> New -> Drags and drops or selects file (file limit = 1) ->
 
 when new page loads api call to load report id{} etc and data ia automatically sent to front end for plots to instantly enter, javascript object on front end that is edited with the user inputs to render plots
 
+Next API Endpoint
+Name the report and save it to the database 
+    -include database crud tests and crud endpoint

@@ -1,10 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlmodel import Field, SQLModel
 
 class Reports(SQLModel, table = True):
-    id : int | None = Field(default=None, primary_key=True)
-    name : str
-    created_at : datetime = Field(default=datetime.now(tz=datetime.UTC))
-    date_range_start : str
-    date_range_end : str
-    data : str
+    id: int | None = Field(default=None, primary_key=True)
+    name: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    date_range_start: datetime
+    date_range_end: datetime
+    data: str

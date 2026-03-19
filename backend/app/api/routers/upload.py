@@ -1,4 +1,3 @@
-from typing import Annotated
 from fastapi import UploadFile, APIRouter, HTTPException
 from app.api.services.clean_data import clean_and_format_data
 
@@ -10,7 +9,7 @@ Upload Endpoint - This is where the user clicks a button called new (And drags a
 
 MAX_FILE_SIZE = 5 * 1024 * 1024
 
-@router.post("/upload")
+@router.post("/reports/upload")
 async def clean_upload(file : UploadFile):
     if file.size > MAX_FILE_SIZE:
         raise HTTPException(status_code=413, detail=f"Filesize too large, must be below {MAX_FILE_SIZE/(1024*1024)} Mb")
@@ -19,8 +18,24 @@ async def clean_upload(file : UploadFile):
     #Return cleaned dataframe file as a json to frontend
     contents = await file.read()
     try:
-        clean_and_format_data(contents)
+        start_date, end_date, report_dataframe = clean_and_format_data(contents)
     except ValueError as error_value:
         raise HTTPException(status_code=422, detail=str(error_value))
-    return clean_and_format_data(contents).to_dict(orient="records")
+    
+    #Rename columns to match ReportRow schema
+    report_dataframe = report_dataframe.rename(columns={
+        "Order Date": "order_date",
+        "Order ID": "order_id",
+        "Product SKU": "product_sku",
+        "Product Name": "product_name",
+        "Qty Ordered": "quantity_ordered",
+        "Price": "price",
+        "Model Range": "model_range"
 
+    })
+
+    return {
+        "start_date": start_date,
+        "end_date": end_date,
+        "report_data": report_dataframe.to_dict(orient="records")
+    }

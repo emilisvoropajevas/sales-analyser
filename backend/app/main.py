@@ -1,7 +1,7 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.core.database import create_db_and_tables
-from app.api.routers import upload
+from app.api.routers import upload, save
 
 @asynccontextmanager
 async def lifespan(app : FastAPI):
@@ -12,6 +12,7 @@ app = FastAPI(lifespan = lifespan)
 
 app.include_router(upload.router)
 
+app.include_router(save.router)
 
 
 
