@@ -16,7 +16,7 @@ async def save_upload(upload_report: SaveUpload, session : SessionDep) -> Report
         upload_data_dict.append(row.model_dump(mode="json"))
 
     upload_data_string = json.dumps(upload_data_dict)
-    #Map Savceupload -> Reports 
+    #Map Save upload -> Reports 
     new_report = Reports(
         name = upload_report.name,
         date_range_start = upload_report.start_date,
