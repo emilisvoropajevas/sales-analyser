@@ -1,5 +1,4 @@
 import pandas as pd
-from datetime import datetime
 from io import BytesIO
 
 required_columns = ['Order Date', 'Order ID', 'Product SKU', 'Product Name', 'Qty Ordered', 'Price']
@@ -18,8 +17,11 @@ def clean_and_format_data(csv_file):
         raise ValueError(f"Column {missing_columns} missing from Dataframe")
 
     uploaded_file_as_dataframe['Order Date'] = (pd.to_datetime(uploaded_file_as_dataframe['Order Date'], errors = 'coerce')).dt.normalize()
+
     if uploaded_file_as_dataframe['Order Date'].isnull().sum() / len(uploaded_file_as_dataframe['Order Date']) > 0.1:
-        raise ValueError("Too many null Date rows")
+        raise ValueError("Too many null date rows")
+    else:
+        uploaded_file_as_dataframe['Order Date'].dropna()
     
     report_dataframe = uploaded_file_as_dataframe[['Order Date', 'Order ID', 'Product SKU', 'Product Name', 'Qty Ordered', 'Price']].copy()
     
