@@ -29,3 +29,7 @@ class ReportsHistory(BaseModel):
     created_at: datetime
     date_range_start: datetime
     date_range_end: datetime
+
+class UpdateReport(BaseModel):
+    name: Annotated[str, AfterValidator(is_empty)]
+

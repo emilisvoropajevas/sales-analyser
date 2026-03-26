@@ -45,3 +45,15 @@ def test_get_report(client: TestClient):
     assert not_found_response.status_code == 404
     assert not_found_response.json() == {"detail": "Report not found"}
 
+def test_update_report(client: TestClient):
+    send_report_data = client.post("/reports/save", json={"name": "Report_3", "start_date": "2025-03-24T15:36:15.889Z", "end_date": "2026-03-24T15:36:15.889Z", "data": []})
+    update_report = client.put("/reports/1", json={"name": "Renamed_Report"})
+    send_bad_update = client.put("/reports/1", json={"name": ""})
+    
+    assert update_report.status_code == 200
+    assert update_report.json()["name"] == "Renamed_Report"
+    
+    assert send_bad_update.status_code == 422
+    assert send_bad_update.json() == {"detail": "Name can't be blank"}
+
+
