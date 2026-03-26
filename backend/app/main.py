@@ -3,8 +3,9 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from contextlib import asynccontextmanager
+
 from app.core.database import create_db_and_tables
-from app.api.routers import upload, save
+from app.api.routers import upload, save, reports
 
 @asynccontextmanager
 async def lifespan(app : FastAPI):
@@ -15,6 +16,7 @@ app = FastAPI(lifespan = lifespan)
 
 app.include_router(upload.router)
 app.include_router(save.router)
+app.include_router(reports.router)
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc: RequestValidationError):

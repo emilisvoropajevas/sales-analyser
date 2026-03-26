@@ -23,5 +23,9 @@ class SaveUpload(BaseModel):
     end_date: datetime
     data: list[ReportRow] = []
 
-
-
+class ReportsHistory(BaseModel):
+    id: int
+    name: str
+    created_at: datetime
+    date_range_start: datetime
+    date_range_end: datetime
