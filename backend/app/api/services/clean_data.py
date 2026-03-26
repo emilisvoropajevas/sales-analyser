@@ -2,8 +2,7 @@ import pandas as pd
 from io import BytesIO
 
 required_columns = ['Order Date', 'Order ID', 'Product SKU', 'Product Name', 'Qty Ordered', 'Price']
-#Cleaning function for uploaded data
-#Add conversions
+
 def clean_and_format_data(csv_file):
     try:
         uploaded_file_as_dataframe = pd.read_csv(BytesIO(csv_file))
@@ -31,10 +30,8 @@ def clean_and_format_data(csv_file):
     # - Order in ascending order
     report_dataframe = report_dataframe.sort_values(by = 'Order Date', ascending= True).reset_index(drop = True)
 
-    #Add in Model Column
     report_dataframe['Model Range'] = report_dataframe['Product SKU'].str.rsplit("/", n=1).str[0]
     
-    #Extrat start and end date
     start_date = report_dataframe['Order Date'].min()
     end_date = report_dataframe['Order Date'].max()
 

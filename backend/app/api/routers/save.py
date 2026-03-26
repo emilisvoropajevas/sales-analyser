@@ -1,14 +1,16 @@
 from fastapi import APIRouter, HTTPException
 import json
-from datetime import datetime
 
 from app.core.database import SessionDep
 from app.models import Reports
 from app.schemas import SaveUpload
 
+"""
+User is returned a cleaned dataframe and is asked to enter name and save report.
+"""
 router = APIRouter()
 
-@router.post("/report/")
+@router.post("/reports/save")
 async def save_upload(upload_report: SaveUpload, session : SessionDep) -> Reports:
     #Since SaveUpload stores a list of object, need to serialise and dump each to convert to json to store as string
     upload_data_dict = []
@@ -27,6 +29,3 @@ async def save_upload(upload_report: SaveUpload, session : SessionDep) -> Report
     session.commit()
     session.refresh(new_report)
     return new_report
-
-
-

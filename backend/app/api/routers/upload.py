@@ -19,8 +19,8 @@ async def clean_upload(file : UploadFile):
     contents = await file.read()
     try:
         start_date, end_date, report_dataframe = clean_and_format_data(contents)
-    except ValueError as error_value:
-        raise HTTPException(status_code=422, detail=str(error_value))
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
     
     #Rename columns to match ReportRow schema
     report_dataframe = report_dataframe.rename(columns={

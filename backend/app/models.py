@@ -8,3 +8,5 @@ class Reports(SQLModel, table = True):
     date_range_start: datetime
     date_range_end: datetime
     data: str
+
+#Note : created_at will showcase all of time including seconds, for next commit adjust this

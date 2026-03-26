@@ -36,6 +36,7 @@ missing_columns_dataframe = pd.DataFrame({
     'Order ID': ['000321321', '000432432'],
     'Product SKU': ['ABC-f/1', 'DEF-f/2'],
     'Product Name': ['Product A', 'Product B'],
+    'Price': [4.99,1.99]
 })
 
 test_csv = test_dataframe.to_csv(index=False).encode()
@@ -69,4 +70,4 @@ def test_upload_many_null_dates():
 
 def test_upload_missing_columns():
     response = client.post("/reports/upload", files={"file": ("missing_columns_csv.csv", missing_columns_csv, "text/csv")})
-    assert response.json() == {"detail": "Column {'Qty Ordered', 'Price'} missing from Dataframe"}
+    assert response.json() == {"detail": "Column {'Qty Ordered'} missing from Dataframe"}

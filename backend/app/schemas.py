@@ -1,7 +1,12 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, AfterValidator
 from datetime import datetime
+from typing import Annotated
 
-#['Order Date', 'Order ID', 'Product SKU', 'Product Name', 'Qty Ordered', 'Price']
+#Validate input type "" to make sure it's not accepted for save endpoint
+def is_empty(value: str) -> str:
+    if not value.strip():
+        raise ValueError("Name can't be blank")
+    return value.strip()
 
 class ReportRow(BaseModel):
     order_date: datetime
@@ -12,10 +17,11 @@ class ReportRow(BaseModel):
     price: float
     model_range: str
 
-
-
 class SaveUpload(BaseModel):
-    name: str
+    name: Annotated[str, AfterValidator(is_empty)]
     start_date: datetime
     end_date: datetime
     data: list[ReportRow] = []
+
+
+
