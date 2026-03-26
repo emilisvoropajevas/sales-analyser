@@ -33,3 +33,15 @@ def test_get_report_history(client: TestClient):
     assert response.json()[0]["name"] == "Report_1" 
     assert "data" not in response.json()[0]
     
+def test_get_report(client: TestClient):
+    send_report_data = client.post("/reports/save", json={"name": "Report_2", "start_date": "2025-03-24T15:36:15.889Z", "end_date": "2026-03-24T15:36:15.889Z", "data": []})
+    response = client.get("/reports/1")
+
+    assert response.status_code == 200
+    assert response.json()["name"] == "Report_2"
+    assert "data" in response.json()
+
+    not_found_response = client.get("/reports/2")
+    assert not_found_response.status_code == 404
+    assert not_found_response.json() == {"detail": "Report not found"}
+
