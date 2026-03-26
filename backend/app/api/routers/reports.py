@@ -33,3 +33,12 @@ async def update_report(report_id: int, change_name: UpdateReport , session: Ses
     session.commit()
     session.refresh(report_to_update)
     return report_to_update
+
+@router.delete("/reports/{report_id}")
+async def delete_report(report_id: int, session: SessionDep):
+    report = session.get(Reports, report_id)
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+    session.delete(report)
+    session.commit()
+    return {"message": "Report deleted"}
